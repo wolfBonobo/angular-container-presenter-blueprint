@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TodosPageContainer } from './todos-page.container';
+import { TodosPageContainer } from './todos-page.component';
 
 describe('TodosPageContainer', () => {
   let component: TodosPageContainer;

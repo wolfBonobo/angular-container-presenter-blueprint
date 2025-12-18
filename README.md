@@ -1,280 +1,229 @@
 # Angular Container/Presenter Blueprint
 
-A template repository for building **scalable Angular applications** using a clean **Container/Presenter architecture**, feature‑based structure, and strict separation between UI and business logic.  
-This blueprint provides conventions that promote maintainability, reusability, and clarity in medium and large Angular frontends.
+A template repository for building **scalable Angular applications** using a clean **Container/Presenter architecture**, feature-based structure, and strict separation between UI and business logic.
+
+This blueprint defines **clear architectural boundaries** that scale well for medium and large Angular frontends.
 
 ---
 
 ## 🧱 Architecture Overview
 
-This template implements the **Container / Presenter Pattern**, structured into:
+This template implements the **Container / Presenter Pattern** with explicit layers per feature.
 
-### **Container Components (Smart)**
+### Page Components (Containers / Smart)
 
-- Handle data loading and orchestration.
-- Communicate with facades and services.
-- Map UI events → business operations.
+- Route-level components.
+- Handle orchestration, navigation, and data flow.
+- Inject facades and interact with the router.
 - Do **not** contain UI logic.
 
-Example:  
-`features/todos/containers/todos-page/`
+Example:
 
-### **Presenter Components (Dumb)**
-
-- Pure UI components.
-- Stateless and reusable.
-- Receive data via `@Input()`.
-- Emit events via `@Output()`.
-- No business logic.
-
-Example:  
-`features/todos/components/todos-list/`  
-`features/todos/components/todos-stats/`
-
-### **Data‑Access Layer**
-
-- Contains facades, services, and domain models.
-- Facade acts as the single access point for the feature.
-- Services encapsulate HTTP calls or mock data.
-
-Example:  
-`features/todos/data-access/`
-
-This results in a clear, testable, scalable Angular architecture with minimal coupling.
+```
+features/todos/pages/todos-page/
+```
 
 ---
 
-## 📁 Suggested Project Structure
+### UI Components (Presenters / Dumb)
 
-```text
-src/
- ├─ main.ts
- ├─ app.config.ts
- └─ app/
-     ├─ core/                          # Global services, interceptors, guards
-     ├─ shared/                        # Reusable UI and utilities
-     │   ├─ ui/                        # Generic presentational components (buttons, cards…)
-     │   ├─ directives/
-     │   └─ pipes/
-     └─ features/
-         └─ todos/                     # Example feature
-             ├─ containers/            # Container (smart) components
-             │   └─ todos-page/
-             │       ├─ todos-page.container.ts
-             │       ├─ todos-page.container.html
-             │       ├─ todos-page.container.css
-             │       └─ todos-page.container.spec.ts
-             ├─ components/            # Presenter (dumb) components
-             │   ├─ todos-list/
-             │   │   ├─ todos-list.component.ts
-             │   │   ├─ todos-list.component.html
-             │   │   ├─ todos-list.component.css
-             │   │   └─ todos-list.component.spec.ts
-             │   └─ todos-stats/
-             │       ├─ todos-stats.component.ts
-             │       ├─ todos-stats.component.html
-             │       ├─ todos-stats.component.css
-             │       └─ todos-stats.component.spec.ts
-             └─ data-access/           # Models, services, facades
-                 ├─ todo.model.ts
-                 ├─ todos.facade.ts
-                 ├─ todos.service.ts
-                 └─ todos.service.spec.ts
+- Pure presentational components.
+- Stateless and reusable.
+- Receive data via `@Input()`.
+- Emit events via `@Output()`.
+- No business logic, no services, no router.
+
+Example:
+
+```
+features/todos/ui/todos-list/
+features/todos/ui/todos-stats/
 ```
 
-> File and folder names may be adapted to your organization’s naming conventions.
+---
+
+### Domain Layer
+
+- Pure TypeScript.
+- Business language only (models, types, rules).
+- No Angular or framework dependencies.
+
+Example:
+
+```
+features/todos/domain/
+```
+
+---
+
+### Data-Access Layer
+
+- Facades + services.
+- Facade is the **single entry point** for feature state and logic.
+- Services encapsulate HTTP or external APIs.
+
+Example:
+
+```
+features/todos/data-access/
+```
+
+---
+
+## 📁 Project Structure
+
+```text
+src/app/
+ ├─ core/                          # Global services, interceptors, guards
+ ├─ shared/                        # Reusable UI and utilities
+ │   ├─ ui/                        # Generic presentational components
+ │   ├─ directives/
+ │   └─ pipes/
+ └─ features/
+     └─ todos/                     # Example feature
+         ├─ domain/
+         │   └─ todo.model.ts
+         ├─ data-access/
+         │   ├─ todos.facade.ts
+         │   ├─ todos.service.ts
+         │   └─ *.spec.ts
+         ├─ pages/
+         │   └─ todos-page/
+         │       ├─ todos-page.component.ts
+         │       ├─ todos-page.component.html
+         │       ├─ todos-page.component.css
+         │       └─ todos-page.component.spec.ts
+         └─ ui/
+             ├─ todos-list/
+             └─ todos-stats/
+```
+
+---
+
+## 📏 Naming & File Conventions
+
+| Concept       | Pattern               | Example                   | Location                 |
+| ------------- | --------------------- | ------------------------- | ------------------------ |
+| **Container** | `*-page.component.ts` | `todos-page.component.ts` | `features/*/pages`       |
+| **Presenter** | `*.component.ts`      | `todos-list.component.ts` | `features/*/ui`          |
+| **Facade**    | `*.facade.ts`         | `todos.facade.ts`         | `features/*/data-access` |
+| **Service**   | `*.service.ts`        | `todos.service.ts`        | `features/*/data-access` |
+| **Model**     | `*.model.ts`          | `todo.model.ts`           | `features/*/domain`      |
 
 ---
 
 ## 🧰 Tech Stack
 
-| Component         | Version     | Notes                                |
-| ----------------- | ----------- | ------------------------------------ |
-| **Angular**       | 18+         | Standalone components, signals ready |
-| **Node**          | 20+         | Recommended LTS                      |
-| **Nx (Optional)** | Latest      | Can be added for monorepo scaling    |
-| **RxJS**          | 7+          | Stream + async orchestration         |
-| **TypeScript**    | Strict mode | Enforced by template                 |
+| Component     | Version | Notes                                |
+| ------------- | ------- | ------------------------------------ |
+| Angular       | 18+     | Standalone components, signals ready |
+| Node          | 20+     | Recommended LTS                      |
+| RxJS          | 7+      | Reactive streams                     |
+| TypeScript    | Strict  | Enforced by template                 |
+| Nx (Optional) | Latest  | Optional monorepo scaling            |
 
 ---
 
-# 🧩 Example Feature: Todos
+## 🧩 Example Feature: Todos
 
-Included to demonstrate the full pattern:
+### TodosPageComponent (Page / Container)
 
-### ✔ `TodosPageContainer`
+- Loads todos
+- Injects `TodosFacade`
+- Handles user actions
+- Delegates rendering to UI components
 
-Smart component responsible for:
+### TodosListComponent (UI / Presenter)
 
-- Loading todos
-- Exposing streams (`todos$`, `loading$`)
-- Handling toggle/remove actions
-- Delegating UI to presenters
+- Displays todo list
+- Emits `toggle` and `remove` events
 
-### ✔ `TodosListComponent`
+### TodosStatsComponent (UI / Presenter)
 
-Presenter responsible for:
+- Displays aggregated counters
 
-- Displaying list of todos
-- Emitting `toggle` + `remove` events
+### TodosFacade
 
-### ✔ `TodosStatsComponent`
+- Orchestrates feature state
+- Connects pages with services
+- Encapsulates business logic
 
-Presenter responsible for:
+### TodosService
 
-- Showing total, completed, pending counters
-
-### ✔ `TodosFacade`
-
-- Connects container ↔ services
-- Maintains reactive state
-- Encapsulates feature logic
-
-### ✔ `TodosService`
-
-Mock or API-based implementation.
+- Handles HTTP or mock API calls
 
 ---
 
-# 📡 Development Commands
-
-### Install dependencies
+## 📡 Development Commands
 
 ```bash
 npm install
-```
-
-### Start development server
-
-```bash
 npm start
-```
-
-### Build for production
-
-```bash
+npm test
 npm run build
 ```
 
-### Run tests
-
-```bash
-npm test
-```
-
 ---
 
-# ⚙️ Base Application Configuration
+## ⚙️ Base Application Configuration
 
-This template uses:
-
-- Strict mode enabled
-- Standalone Angular application (no NgModules)
+- Standalone Angular application
+- Strict TypeScript enabled
 - Feature-based routing
 - Shared UI library (`shared/ui`)
 - Global styles in `styles.css`
-
-You can expand with:
-
-- HTTP interceptors
-- Global error handling
-- Authentication module
-- API layer
-- Design‑system components
-
----
-
-## 🚀 Getting Started
-
-### 1. Create a new Angular app from this template
-
-Click **“Use this template” → “Create a new repository”**.
-
-### 2. Clone your new repository
-
-```bash
-git clone https://github.com/<your-org>/<your-angular-app>.git
-```
-
-### 3. Install dependencies
-
-```bash
-npm install
-```
-
-### 4. Start building your application
-
-Use the provided Todos feature as a reference for:
-
-- New containers
-- New presenters
-- New facades
-- New data-access modules
 
 ---
 
 ## 🧪 Testing Strategy
 
-This template supports:
-
 ### Unit Tests
 
-- Presenter components
-- Container components
+- UI components
+- Page components
 - Facades
 - Services
 
 ### Integration Tests
 
-- Component interaction tests
-- Feature‑level rendering tests
+- Feature-level rendering
+- Page ↔ UI interaction
 
 ### E2E (Optional)
 
-You can integrate Cypress or Playwright on top of this template.
+- Cypress or Playwright
 
 ---
 
-## 🧩 Extending the Blueprint
+## 🚫 Dependency Rules (Non-Negotiable)
 
-Common enhancements include:
+- `ui/**` must not import `data-access/**`
+- `domain/**` must not import Angular
+- `core/**` must not depend on `features/**`
+- `pages/**` is the only smart layer
 
-- Add `shared/ui` components (Button, Card, Spinner…)
-- Add API layer using HttpClient
-- Add local storage service
-- Add global state logic (optional)
-- Add routing guards, auth modules
-- Add i18n support
-- Add Nx and convert into a design‑system-ready workspace
-- Add CI/CD pipelines
+---
 
-The template is intentionally minimal so teams can extend it freely.
+## 🚀 Getting Started
+
+1. Click **Use this template**
+2. Clone the repository
+3. Install dependencies
+4. Use the Todos feature as reference
 
 ---
 
 ## 📚 Philosophy
 
-The objective of this template is to:
-
-- Standardize Angular frontend creation
-- Promote scalable frontend architecture
 - Separate UI from logic
-- Encourage reusable presentation components
-- Reduce cognitive load and boilerplate
-- Provide a clean, maintainable foundation
+- Make architecture explicit
+- Reduce cognitive load
+- Optimize for scale and maintainability
 
-If your frontend becomes spaghetti code despite this template…  
-statistically, the problem is you — not the template 😄
-
----
-
-## 🤝 Contributing
-
-If you improve this blueprint or generalize a pattern, feel free to open a Pull Request.  
-If you introduce antipatterns, feel free not to.
+If this template fails, statistically speaking, the issue is human-related.
 
 ---
 
 ## 📄 License
 
-This project is released under **MIT** — use it freely.
+MIT — use it freely.

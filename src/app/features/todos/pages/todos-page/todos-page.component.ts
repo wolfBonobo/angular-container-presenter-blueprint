@@ -1,16 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { Todo } from '@features/todos/domain/todo.model';
+import { TodosListComponent } from '@features/todos/ui/todos-list/todos-list.component';
+import { TodosStatsComponent } from '@features/todos/ui/todos-stats/todos-stats.component';
 import { TodosFacade } from '../../data-access/todos.facade';
-import { TodosListComponent } from '@features/todos/components/todos-list/todos-list.component';
-import { Todo } from '@features/todos/data-access/todo.model';
-import { TodosStatsComponent } from '@features/todos/components/todos-stats/todos-stats.component';
 
 @Component({
   selector: 'app-todos-page',
   standalone: true,
   imports: [CommonModule, TodosListComponent, TodosStatsComponent],
-  templateUrl: './todos-page.container.html',
-  styleUrl: './todos-page.container.css',
+  templateUrl: './todos-page.component.html',
+  styleUrl: './todos-page.component.css',
 })
 export class TodosPageContainer implements OnInit {
   private readonly facade = inject(TodosFacade);

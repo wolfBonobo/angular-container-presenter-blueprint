@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { TodosPageContainer } from '@features/todos/containers/todos-page/todos-page.container';
+import { TodosPageContainer } from '@features/todos/pages/todos-page/todos-page.component';
 
 export const routes: Routes = [
   {

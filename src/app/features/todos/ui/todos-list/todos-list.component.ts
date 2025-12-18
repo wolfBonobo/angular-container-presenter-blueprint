@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Todo } from '@features/todos/data-access/todo.model';
+import { Todo } from '@features/todos/domain/todo.model';
 
 @Component({
   selector: 'app-todos-list',

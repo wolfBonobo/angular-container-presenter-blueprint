@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
-import { Todo } from '@features/todos/data-access/todo.model';
+import { Todo } from '@features/todos/domain/todo.model';
+import { Observable, delay, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
